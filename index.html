@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROYECTO EMIR (EMIR_BIO) | Arquitectura Hardware-Software Cuaternaria</title>
+    <meta
+      name="description"
+      content="PROYECTO EMIR (EMIR_BIO): arquitectura memristiva cuaternaria en HfO2, refrigeración microfluídica Galinstan cero agua (WUE 0.00 L/kWh) y plataforma Cloud en Google Cloud Run."
+    />
+    <link rel="canonical" href="https://www.proyectoemir.me/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.proyectoemir.me/" />
+    <meta property="og:title" content="PROYECTO EMIR | Arquitectura Cuaternaria HfO2 y Microfluídica Cero Agua" />
+    <meta
+      property="og:description"
+      content="Plataforma Deep-Tech Pre-Seed con patente radicada IMPI MX/a/2026/012987, mitigación térmica VDIV de 3.33 µs y despliegue en Google Cloud."
+    />
+    <style>
+      :root {
+        --bg: #07090e;
+        --surface: #0d121d;
+        --border: #1e293b;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --accent: #22d3ee;
+        --emerald: #34d399;
+        --amber: #fbbf24;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+      }
+      a { color: inherit; text-decoration: none; }
+      .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+      header {
+        border-bottom: 1px solid var(--border);
+        background: rgba(7, 9, 14, 0.96);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        height: 68px;
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-size: 1.05rem;
+        white-space: nowrap;
+        color: #fff;
+      }
+      nav {
+        display: flex;
+        gap: 24px;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      nav a:hover { color: #fff; }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 18px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #06101c;
+        font-weight: 700;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .btn-primary:hover { background: #67e8f9; }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-weight: 600;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .hero { padding: 72px 0 56px; border-bottom: 1px solid var(--border); }
+      .kicker {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.8rem;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      h1 {
+        font-size: clamp(2rem, 3.6vw, 3rem);
+        line-height: 1.15;
+        margin: 0 0 18px;
+        color: #fff;
+        max-width: 920px;
+      }
+      .lead {
+        font-size: 1.05rem;
+        color: #cbd5e1;
+        max-width: 780px;
+        margin: 0 0 28px;
+      }
+      .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+      .kpi-bar {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        margin-top: 40px;
+        overflow: hidden;
+      }
+      .kpi-cell {
+        padding: 18px 20px;
+        border-right: 1px solid var(--border);
+      }
+      .kpi-cell:last-child { border-right: none; }
+      .kpi-label { font-size: 0.75rem; color: var(--muted); font-family: ui-monospace, monospace; }
+      .kpi-value { font-size: 1.45rem; font-weight: 800; color: #fff; margin: 4px 0; font-family: ui-monospace, monospace; }
+      .kpi-sub { font-size: 0.78rem; color: var(--emerald); }
+      section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+      h2 { font-size: 1.55rem; margin: 0 0 12px; color: #fff; }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+        margin-top: 24px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 22px;
+      }
+      .card h3 { margin: 0 0 8px; font-size: 1.05rem; color: #fff; }
+      .card p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      footer {
+        padding: 36px 0 48px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .footer-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+      }
+      @media (max-width: 900px) {
+        nav { display: none; }
+        .kpi-bar, .grid-3 { grid-template-columns: 1fr; }
+        .kpi-cell { border-right: none; border-bottom: 1px solid var(--border); }
+        .kpi-cell:last-child { border-bottom: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap topbar">
+        <a href="/" class="brand">PROYECTO EMIR · EMIR_BIO</a>
+        <nav aria-label="Navegación principal">
+          <a href="#arquitectura">Arquitectura</a>
+          <a href="#cloud">Google Cloud</a>
+          <a href="#propiedad">Propiedad Intelectual</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+        <a
+          href="https://ais-pre-v53j66b4quyvfr4v6wfjfa-510646455896.us-west1.run.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary"
+        >
+          Abrir Plataforma Interactiva
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <div class="kicker">
+            DEEP TECH PRE-SEED · IMPI MX/a/2026/012987 (PRIORIDAD 21/10/2026) · LEÓN, GTO, MÉXICO
+          </div>
+          <h1>
+            Dispositivo Microelectrónico Memristivo Cuaternario con Refrigeración Microfluídica Cero Agua y Enlace RF Resiliente
+          </h1>
+          <p class="lead">
+            <strong>PROYECTO EMIR v1.0 (EMIR_OS)</strong> diseña una arquitectura hardware-software orientada a centros de datos de IA de alta densidad y misiones críticas: lógica Base-4 en óxido de hafnio (HfO₂), circuito cerrado de Galinstan en Nitruro de Aluminio de 12.5 µm (WUE = 0.00 L/kWh) y mitigación térmica autónoma VDIV en 3.33 µs con 0.00% BSOD.
+          </p>
+          <div class="actions">
+            <a
+              href="https://ais-pre-v53j66b4quyvfr4v6wfjfa-510646455896.us-west1.run.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-primary"
+            >
+              Entrar al Simulador y Data Room (Cloud Run)
+            </a>
+            <a href="mailto:emir@proyectoemir.me" class="btn-secondary">
+              Contacto Corporativo: emir@proyectoemir.me
+            </a>
+          </div>
+
+          <div class="kpi-bar" role="region" aria-label="Indicadores clave del modelo EMIR v1.0">
+            <div class="kpi-cell">
+              <div class="kpi-label">EFICIENCIA HÍDRICA & PUE (MPW)</div>
+              <div class="kpi-value">0.00 L/kWh</div>
+              <div class="kpi-sub">PUE modelado 1.042 vs 1.45 legado (-42% OpEx)</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-label">MITIGACIÓN TÉRMICA VDIV</div>
+              <div class="kpi-value">Δt = 3.33 µs</div>
+              <div class="kpi-sub">Trigger HW 14.5 ns · 78 °C → 26 °C · 0.00% BSOD</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-label">LÓGICA BASE-4 & RF 868 MHz</div>
+              <div class="kpi-value">41.2 dB FM</div>
+              <div class="kpi-sub">Fidelidad 99.9999% · Pin R20 @ 50.0 Ω · SIW 52.4 dB</div>
+            </div>
+            <div class="kpi-cell">
+              <div class="kpi-label">MODELO SERIE A & FTO LEGAL</div>
+              <div class="kpi-value">Payback 8.6m</div>
+              <div class="kpi-sub">Ventana 14 meses · TIR 74.3% · 0.00% colisión FTO</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="arquitectura">
+        <div class="wrap">
+          <h2>Arquitectura Física y Ruta Pre-Silicio MPW</h2>
+          <p class="lead">
+            Solución fabless diseñada para manufactura Multi-Project Wafer (nodos comerciales 28/22 nm) con encapsulado 484-ball BGA-M, controlador maestro STM32H753XI @ 480 MHz y bus síncrono FMC a 100 MHz.
+          </p>
+          <div class="grid-3">
+            <div class="card">
+              <h3>1. Cómputo Cuaternario HfO₂</h3>
+              <p>
+                Cuatro estados discretos de conductancia (Q₀–Q₃) con riel dual dinámico: V_shout = 1.40 V para cómputo de alto desempeño y V_whisper = 0.30 V para confinamiento basal de ultra bajo consumo.
+              </p>
+            </div>
+            <div class="card">
+              <h3>2. Microfluídica de Galinstan (12.5 µm)</h3>
+              <p>
+                Microcanales sellados en Nitruro de Aluminio (AlN) con aleación eutéctica líquida (68.5% Ga, 21.5% In, 10% Sn) modulada de 1.00 a 5.00 m/s para sostener racks de hasta 85.0 kW sin evaporación de agua.
+              </p>
+            </div>
+            <div class="card">
+              <h3>3. Transceptor Sub-GHz y Resiliencia</h3>
+              <p>
+                Microstrip adaptado exactamente a 50.0 Ω en el Pin R20 bajo IPC-2141, pérdida de retorno S₁₁ = -28.4 dB y margen de desvanecimiento de 41.2 dB frente a interferencia electromagnética o radiación.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cloud">
+        <div class="wrap">
+          <h2>Infraestructura en Google Cloud</h2>
+          <p class="lead">
+            La plataforma interactiva de simulación, auditoría financiera y gestión documental de PROYECTO EMIR v1.0 opera directamente sobre infraestructura gestionada de Google Cloud.
+          </p>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Google Cloud Run (us-west1)</h3>
+              <p>
+                Servicio serverless contenedorizado con escalamiento automático a cero, transporte TLS 1.3 y separación estricta entre vista pública sanitizada y consola administrativa autenticada.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Cloud Firestore & Auditoría SHA-256</h3>
+              <p>
+                Persistencia en tiempo real de hitos técnicos, snapshots de cumplimiento, trazabilidad documental e historial de evaluaciones para diligencia debida de inversionistas.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Consultoría Legal-Técnica Asistida</h3>
+              <p>
+                Integración server-side para análisis comparativo de reivindicaciones, modelado de OpEx en centros de datos (-42%) y generación de reportes ejecutivos PDF/D3.js sin exponer claves en cliente.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="propiedad">
+        <div class="wrap">
+          <h2>Propiedad Intelectual y Titularidad</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Expediente Oficial IMPI</h3>
+              <p class="mono">
+                MX/a/2026/012987 · Folio PASE MX/E/2026/081063 · Contestación de Forma MX/E/2026/086234 · Prioridad: 21/10/2026.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Inventor y Titular Único (100%)</h3>
+              <p>
+                Emir Daniel Esteban Valderrama. Pliego íntegro de 18 reivindicaciones y 6 figuras técnicas, con reserva estricta de secretos industriales de manufactura conforme a los Arts. 82–86 de la LFPPI.
+              </p>
+            </div>
+            <div class="card" id="contacto">
+              <h3>Contacto Institucional</h3>
+              <p>
+                Evaluadores técnicos, programas de aceleración Cloud y fondos Venture Capital: <strong style="color:#fff">emir@proyectoemir.me</strong> · León, Guanajuato, México.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-row">
+        <div>
+          © 2026 PROYECTO EMIR (EMIR_BIO) · Emir Daniel Esteban Valderrama · Expediente IMPI MX/a/2026/012987
+        </div>
+        <div style="display:flex; gap:16px;">
+          <a href="privacy.html" style="color:var(--accent);">Aviso de Privacidad y Uso de IP</a>
+          <a
+            href="https://ais-pre-v53j66b4quyvfr4v6wfjfa-510646455896.us-west1.run.app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            App Cloud Run
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
